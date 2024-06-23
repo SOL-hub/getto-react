@@ -1,8 +1,15 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin"); //번들링이 일어날 때 css파일을 별도의 파일로 호환하겠다.
+
+const dotenv = require('dotenv');
+const webpack = require('webpack');
+
+dotenv.config();
+
+//process.env
 
 const isProduction = process.env.NODE_ENV === "production";
-const MiniCssExtractPlugin = require("mini-css-extract-plugin"); //번들링이 일어날 때 css파일을 별도의 파일로 호환하겠다.
 
 module.exports = {
     entry: './src/index.tsx', // 확장자 수정
@@ -63,5 +70,8 @@ module.exports = {
           filename: "[name].[contenthash:8].css",
         })
       : undefined,
+      new webpack.DefinePlugin({
+        'process.env': JSON.stringify(process.env)
+      })
   ].filter(Boolean),
 };

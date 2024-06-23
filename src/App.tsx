@@ -1,8 +1,13 @@
+import DynamicMap from "./Map/DynamicMap";
+import KakaoMapScriptLoader from "./Map/KakaoMapScriptLoader";
+import SearchLocation from "./Map/SearchLocation";
+
 const App = () => {
     return (
-        <div className="react">
-            HEllo
-        </div>
+        <KakaoMapScriptLoader >
+         <DynamicMap />
+         <SearchLocation />
+        </KakaoMapScriptLoader>
     )
 }
 
