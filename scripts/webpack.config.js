@@ -2,13 +2,13 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const isProduction = process.env.NODE_ENV === "production";
-const MiniCssExtractPlugin = require('mini-css-extract-plugin') //번들링이 일어날 때 css파일을 별도의 파일로 호환하겠다.
+const MiniCssExtractPlugin = require("mini-css-extract-plugin"); //번들링이 일어날 때 css파일을 별도의 파일로 호환하겠다.
 
 module.exports = {
-  entry: "./src/index.jsx",
-  resolve: {
-    extensions: [".js", ".jsx"], // 번들링에 사용될 파일 확장자 설정
-  },
+    entry: './src/index.tsx', // 확장자 수정
+    resolve: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx'] // 올바른 확장자 목록
+    },
   output: {
     path: path.resolve(__dirname, "dist"), // 현재 경로의 'dist' 폴더에 결과물 저장
     filename: "static/js/[name].[contenthash:8].js",
@@ -29,7 +29,7 @@ module.exports = {
       {
         oneOf: [
           {
-            test: /\.(js|jsx)$/,
+            test: /\.(ts|tsx)$/,
             exclude: /node_modules/,
             use: {
               loader: "babel-loader",
@@ -37,11 +37,12 @@ module.exports = {
           },
           {
             test: /\.css$/,
-            exclude : /node_modules/,
+            exclude: /node_modules/,
             use: [
-                isProduction ? MiniCssExtractPlugin.loader : 'style-loader', 'css-loader'
-            ]
-          }
+              isProduction ? MiniCssExtractPlugin.loader : "style-loader",
+              "css-loader",
+            ],
+          },
         ],
       },
     ],
@@ -56,9 +57,11 @@ module.exports = {
       : new HtmlWebpackPlugin({
           template: "public/index.html",
         }),
-        isProduction ? new MiniCssExtractPlugin({
-            linkType : false,
-            filename : '[name].[contenthash:8].css'
-        }) : undefined
-  ].filter(Boolean)
+    isProduction
+      ? new MiniCssExtractPlugin({
+          linkType: false,
+          filename: "[name].[contenthash:8].css",
+        })
+      : undefined,
+  ].filter(Boolean),
 };
