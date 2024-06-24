@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { useMap } from "../hooks/useMap";
 
 interface PlaceType {
   id: string
@@ -9,6 +10,7 @@ interface PlaceType {
 }
 
 const SearchLocation = () => {
+  const map = useMap();
   const [keyword, setKeyword] = useState("");
   const [places, setPlaces] = useState<PlaceType[]>([]);
   const placeService = useRef<kakao.maps.services.Places | null>(null);
@@ -64,8 +66,9 @@ const SearchLocation = () => {
   };
 
 
-  const handleItemClick = (places:PlaceType) => {
-    
+  const handleItemClick = (place:PlaceType) => {
+    map.setCenter(place.position);
+    map.setLevel(4);
   }
 
   return (

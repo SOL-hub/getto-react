@@ -5,8 +5,9 @@ import SearchLocation from "./Map/SearchLocation";
 const App = () => {
     return (
         <KakaoMapScriptLoader >
-         <DynamicMap />
+         <DynamicMap >
          <SearchLocation />
+         </DynamicMap>
         </KakaoMapScriptLoader>
     )
 }

@@ -1,7 +1,13 @@
-import { useEffect, useRef } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import styled from "@emotion/styled";
+import { KakaoMapContext } from "../hooks/useMap";
 
-const DynamicMap = () => {
+interface DynamicMapProps {
+  children: ReactNode;
+}
+
+const DynamicMap = (props: DynamicMapProps) => {
+  const [map, setMap] = useState<kakao.maps.Map>();
   const kakaoMapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -15,12 +21,21 @@ const DynamicMap = () => {
       level: 3,
     };
 
-    new window.kakao.maps.Map(kakaoMapRef.current, options);
+    setMap(new window.kakao.maps.Map(kakaoMapRef.current, options));
   }, []);
   return (
-    <Container>
-      <Map ref={kakaoMapRef} />
-    </Container>
+    <>
+      <Container>
+        <Map ref={kakaoMapRef} />
+      </Container>
+      {map ? (
+        <KakaoMapContext.Provider value={map}>
+          {props.children}
+        </KakaoMapContext.Provider>
+      ) : (
+        <div>test</div>
+      )}
+    </>
   );
 };
 
