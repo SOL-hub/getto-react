@@ -1,7 +1,16 @@
 import styled from "@emotion/styled";
 import { FormEvent, useEffect, useRef, useState } from "react";
+
+interface PlaceType {
+  id: string
+  position: kakao.maps.LatLng
+  title : string
+  address: string
+}
+
 const SearchLocation = () => {
   const [keyword, setKeyword] = useState("");
+  const [places, setPlaces] = useState<PlaceType[]>([]);
   const placeService = useRef<kakao.maps.services.Places | null>(null);
 
   useEffect(() => {
@@ -27,6 +36,17 @@ const SearchLocation = () => {
       // test
       if (status === kakao.maps.services.Status.OK) {
         console.log(data);
+        const placeInfos = data.map(placeServiceResultItem => {
+          return {
+            id: placeServiceResultItem.id,
+            position: new kakao.maps.LatLng(Number(placeServiceResultItem.y), Number(placeServiceResultItem.x)),
+            title: placeServiceResultItem.place_name,
+            addre: placeServiceResultItem.address_name
+          }
+        })
+
+        setPlaces(placeInfos)
+
       } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
         alert("검색 결과가 존재하지 않습니다.");
         return;
@@ -42,6 +62,12 @@ const SearchLocation = () => {
     e.preventDefault();
     searchPlaces(keyword);
   };
+
+
+  const handleItemClick = (places:PlaceType) => {
+    
+  }
+
   return (
     <Container>
       <Form onSubmit={handleSubmit}>
@@ -53,14 +79,16 @@ const SearchLocation = () => {
         />
       </Form>
       <List>
-        {Array.from({ length: 8 }).map((item, index) => {
+       {
+        places.map((item, index) =>{
           return (
-            <Item key={index}>
-              <label>지역</label>
-              <span>서울시 동작구</span>
+            <Item key={item.id} onClick={() => handleItemClick(item)}>
+              <label>{`${index + 1}. ${item.title}`}</label>
+              <span>{item.address}</span>
             </Item>
-          );
-        })}
+          )
+        })
+       }
       </List>
     </Container>
   );

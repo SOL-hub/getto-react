@@ -19,7 +19,7 @@ const DynamicMap = () => {
   }, []);
   return (
     <Container>
-      <Map ref={kakaoMapRef}/>
+      <Map ref={kakaoMapRef} />
     </Container>
   );
 };
@@ -27,15 +27,15 @@ const DynamicMap = () => {
 export default DynamicMap;
 
 const Container = styled.div`
-    position: absolute;
-    left: 0;
-    right: 0;
-    top:0;
-    bottom: 0;
-`
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+`;
 
 const Map = styled.div`
-    position: static;
-    width: 100%;
-    height:100%;
-`
+  position: static;
+  width: 100%;
+  height: 100%;
+`;
