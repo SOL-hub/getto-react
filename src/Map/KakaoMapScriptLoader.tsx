@@ -1,25 +1,20 @@
 import { ReactNode, useEffect, useState } from "react";
 
 const KAKAO_MAP_SCRIPT_ID = "kakao-map-script";
-// const KAKAO_MAP_APP_KEY = process.env.KAKAO_MAP_KEY;
-const KAKAO_MAP_APP_KEY = 'ffcd0ea59734bdd8c860ac714253f519';
-
-
+const KAKAO_MAP_APP_KEY = process.env.KAKAO_MAP_KEY;
 
 interface KakaoMapScriptLoaderProps {
-    children: ReactNode
+  children: ReactNode;
 }
 
-const KakaoMapScriptLoader = (props:KakaoMapScriptLoaderProps) => {
+const KakaoMapScriptLoader = (props: KakaoMapScriptLoaderProps) => {
   const [mapScriptLoaded, setMapScriptLoaded] = useState(false);
-  
 
   useEffect(() => {
-    const mapScript = document.getElementById(KAKAO_MAP_SCRIPT_ID)
+    const mapScript = document.getElementById(KAKAO_MAP_SCRIPT_ID);
 
-
-    if(mapScript && !window.kakao) {
-        return
+    if (mapScript && !window.kakao) {
+      return;
     }
 
     const script = document.createElement("script");
@@ -27,7 +22,7 @@ const KakaoMapScriptLoader = (props:KakaoMapScriptLoaderProps) => {
     script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_APP_KEY}&libraries=services&autoload=false`;
     script.onload = () => {
       window.kakao.maps.load(() => {
-          setMapScriptLoaded(true);
+        setMapScriptLoaded(true);
       });
     };
     script.onerror = () => {
@@ -37,7 +32,11 @@ const KakaoMapScriptLoader = (props:KakaoMapScriptLoaderProps) => {
     document.getElementById("root")?.appendChild(script);
   }, []);
 
-  return <div>{mapScriptLoaded ? props.children: <div>지도 가져오는 중</div>}Map</div>;
+  return (
+    <div>
+      {mapScriptLoaded ? props.children : <div>지도 가져오는 중</div>}Map
+    </div>
+  );
 };
 
 export default KakaoMapScriptLoader;
