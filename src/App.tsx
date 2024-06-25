@@ -6,20 +6,27 @@ import { PlaceType } from "./Map/mapTypes";
 import MapMarkerController from "./Map/MapMarkerController";
 
 const App = () => {
-    const [places, setPlaces] = useState<PlaceType[]>([]);
-
-    console.log(places)
-    return (
-        <KakaoMapScriptLoader >
-         <DynamicMap >
-        <MapMarkerController places={places}>
-        </MapMarkerController>
-         <SearchLocation onUpdatePlaces={(places) => {
-            setPlaces(places)
-         } } />
-         </DynamicMap>
-        </KakaoMapScriptLoader>
-    )
-}
+  const [places, setPlaces] = useState<PlaceType[]>([]);
+  const [selectedPlaceId, setSelectedPlacedId] = useState(""); //아이디 저장
+  console.log(places);
+  return (
+    <KakaoMapScriptLoader>
+      <DynamicMap>
+        <MapMarkerController
+          places={places}
+          selectedPlaceId={selectedPlaceId}
+        ></MapMarkerController>
+        <SearchLocation
+          onUpdatePlaces={(places) => {
+            setPlaces(places);
+          }}
+          onSelect={(placeId) => {
+            setSelectedPlacedId(placeId);
+          }}
+        />
+      </DynamicMap>
+    </KakaoMapScriptLoader>
+  );
+};
 
 export default App;
