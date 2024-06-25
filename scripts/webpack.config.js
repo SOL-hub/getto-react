@@ -66,7 +66,7 @@ module.exports = {
         chunkFilename: "static/css/[id].[contenthash:8].css",
       }),
     new webpack.DefinePlugin({
-      "process.env": JSON.stringify(process.env),
+      'process.env.REACT_APP_KAKAO_MAP_KEY': JSON.stringify(process.env.REACT_APP_KAKAO_MAP_KEY),
     }),
   ].filter(Boolean),
 };
