@@ -1,6 +1,8 @@
-import { useEffect, useLayoutEffect, useMemo } from "react";
+import ReactDOM from "react-dom";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { PlaceType } from "./mapTypes";
 import { useMap } from "../hooks/useMap";
+import styled from "@emotion/styled";
 
 interface MapMarkerProps {
   place: PlaceType;
@@ -13,17 +15,17 @@ const MARKER_IMAGE_URL =
 
 const MapMarker = (props: MapMarkerProps) => {
   const map = useMap();
+  const container = useRef(document.createElement("div"));
 
   const infoWindow = useMemo(() => {
     return new kakao.maps.CustomOverlay({
       position: props.place.position,
-      content: props.place.title,
-      map: map,
+      content: container.current,
+      // map: map,
     });
   }, []);
 
   console.log(props.showInfo);
-
   const marker = useMemo(() => {
     const imageSize = new kakao.maps.Size(36, 37); // 마커 이미지의 크기
     const imgOptions = {
@@ -41,6 +43,14 @@ const MapMarker = (props: MapMarkerProps) => {
       position: props.place.position, // 마커의 위치
       image: markerImage,
     });
+
+    kakao.maps.event.addListener(marker, 'click', function() {
+      map.setCenter(props.place.position);
+      map.setLevel(4, {
+        animate: true
+      });
+      infoWindow.setMap(map);
+    })
 
     return marker;
     // test
@@ -68,7 +78,39 @@ const MapMarker = (props: MapMarkerProps) => {
     //선택해제
   }, [props.showInfo]);
 
-  return <div>test</div>;
+  return container.current
+    ? ReactDOM.createPortal(
+        <Message onClick={() =>{infoWindow.setMap(null)}}>
+          <Title>{props.place.title}</Title>
+          <Address>{props.place.address}</Address>
+        </Message>,
+        container.current
+      )
+    : null;
 };
+
+const Title = styled.label`
+  font-weight: bold;
+  padding: 6px 8px;
+`
+
+const Address = styled.span`
+  font-size: 12px;
+  padding: 0 6px 6px;
+`
+
+const Message = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 180px;
+  min-height: 50px;
+  margin-left: -90px;
+  border-radius: 1rem;
+
+  background-color: rgba(255, 228, 196, 0.9);
+`;
 
 export default MapMarker;
